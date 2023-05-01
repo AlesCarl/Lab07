@@ -7,13 +7,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 
-
-/**
- * Utility class for connecting to the database
- * 
- * Uses the HikariCP library for managing a connection pool
- * @see <a href="https://brettwooldridge.github.io/HikariCP/">HikariCP</a>
- */
 public class ConnectDB {
 	
 	private static final String jdbcURL = "jdbc:mysql://localhost/poweroutages";
@@ -24,7 +17,7 @@ public class ConnectDB {
 			HikariConfig config = new HikariConfig();
 			config.setJdbcUrl(jdbcURL);
 			config.setUsername("root");
-			config.setPassword("root");
+			config.setPassword("password");
 			
 			config.addDataSourceProperty("cachePrepStmts", true);
 			config.addDataSourceProperty("prepStmtChacheSize", 250);

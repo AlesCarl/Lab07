@@ -5,9 +5,15 @@
 package it.polito.tdp.poweroutages;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.poweroutages.model.ComparatoreByData;
 import it.polito.tdp.poweroutages.model.Model;
 import it.polito.tdp.poweroutages.model.Nerc;
+import it.polito.tdp.poweroutages.model.PowerOut;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -36,9 +42,48 @@ public class FXMLController {
 
     private Model model;
     
+    
+    
+          
     @FXML
     void doRun(ActionEvent event) {
     	txtResult.clear();
+    	
+    	try {
+			Nerc selectedNerc = cmbNerc.getSelectionModel().getSelectedItem();
+			
+			if (selectedNerc == null) {
+				txtResult.setText("Seleziona un NERC ");
+				return;
+			}
+
+			int maxY = Integer.parseInt(txtYears.getText());
+			//controlli validità omessi
+
+			int maxH = Integer.parseInt(txtHours.getText());
+			//controlli validità omessi
+
+		
+					
+			List<PowerOut> worstCase = model.eventiSelezionati(maxY, maxH, selectedNerc);
+			worstCase.sort(new ComparatoreByData());
+			txtResult.clear();
+			
+			txtResult.setText("Totale persone coinvolte: "+model.getMaxPersone() +"\n");
+
+			for (PowerOut ee : worstCase) {
+				
+				txtResult.appendText(ee.toString()); 
+				
+			}
+
+		} catch (NumberFormatException e) {
+			txtResult.setText("Insert a valid number of years and of hours");
+		}
+
+    	
+    	
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -54,5 +99,15 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.setComboBox();
+    }
+    
+    List<Nerc> temp = new LinkedList<Nerc>();
+    
+    public void setComboBox() {
+    	
+    	temp= model.getNercList();
+    	this.cmbNerc.getItems().addAll(temp);  
+    	
     }
 }
